@@ -1,0 +1,65 @@
+# ============================================
+# PHP .gitignore
+# Organizado por seções
+# ============================================
+
+# --- Logs ---
+*.log
+logs/
+
+# --- Cache ---
+.cache/
+.phpunit.result.cache
+.buildpath
+.cache
+
+# --- Composer / Dependências ---
+# A pasta vendor/ não deve ser versionada (reinstalável via composer install)
+vendor/
+composer.phar
+composer.lock
+
+# --- Ambiente / Configuração ---
+.env
+.env.local
+.env.*.local
+
+# --- IDE / Editores ---
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# --- Testes / Cobertura ---
+coverage/
+build/coverage
+tests/_output/*
+phpunit.xml
+
+# --- Build / Distribuição ---
+dist/
+build/
+*.jar
+*.war
+*.ear
+
+# --- Sessões / Temporários ---
+*.tmp
+*.temp
+temp/
+tmp/
+
+# --- Certificados / Segredos ---
+*.pem
+*.p12
+*.pfx
+
+# --- Docker (caso não seja versionado) ---
+# .dockerignore
+
+# --- Documentação gerada ---
+docs/_build/
+docs/relatorio.md
+prompts/
+*.pdf
