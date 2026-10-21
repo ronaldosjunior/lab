@@ -1,0 +1,65 @@
+---
+title: Gerador de Senhas Seguras (PHP CLI) — Diagrama de Componentes e Fluxo de Dados
+version: "0.1"
+---
+
+flowchart TD
+    %% ═══════════════════════════════════════════════
+    %%  Externos
+    %% ═══════════════════════════════════════════════
+    USER(["👤 Usuário<br/>(Terminal / CLI)"])
+
+    %% ═══════════════════════════════════════════════
+    %%  Entrada
+    %% ═══════════════════════════════════════════════
+    subgraph INPUT ["📥 Entrada"]
+        direction LR
+        ARGS["Flags CLI<br/><code>--length --count<br/>--symbols --no-upper<br/>--no-lower --no-digits<br/>--help</code>"]
+    end
+
+    %% ═══════════════════════════════════════════════
+    %%  Aplicação (bin/generator.php)
+    %% ═══════════════════════════════════════════════
+    subgraph APP ["⚙️ Aplicação — <code>bin/generator.php</code>"]
+        direction TB
+
+        PARSER["1. Parser de Argumentos<br/>(parse_flags)"]
+        VALIDATOR{"2. Validador<br/>(valida parâmetros)"}
+        GENERATOR["3. Gerador de Senha<br/>(generate_password)"]
+        CSPRNG["4. CSPRNG<br/><code>random_bytes()</code><br/>(entropia criptográfica)"]
+        BANNER["5. Saída / Formatação<br/>(loop lote)"]
+
+        PARSER --> VALIDATOR
+        VALIDATOR -- "OK" --> GENERATOR
+        GENERATOR --> CSPRNG
+        CSPRNG --> GENERATOR
+        GENERATOR --> BANNER
+    end
+
+    %% ═══════════════════════════════════════════════
+    %%  Saída
+    %% ═══════════════════════════════════════════════
+    subgraph OUTPUT ["📤 Saída"]
+        direction LR
+        STDOUT["<b>stdout</b><br/>Senhas (1/linha)"]
+        STDERR["<b>stderr</b><br/>Mensagens de erro"]
+    end
+
+    %% ═══════════════════════════════════════════════
+    %%  Conexões externas
+    %% ═══════════════════════════════════════════════
+    USER -->|"$ php bin/generator.php …"| ARGS
+    ARGS --> PARSER
+
+    BANNER -->|"senhas geradas"| STDOUT
+    VALIDATOR -->|"erro / --help"| STDERR
+
+    %% ═══════════════════════════════════════════════
+    %%  Estilo
+    %% ═══════════════════════════════════════════════
+    classDef ext fill:#1e1e2e,stroke:#89b4fa,color:#cdd6f4
+    classDef ok  fill:#1a2b3c,stroke:#4ec9b0,color:#cdd6f4
+    classDef err fill:#2d1b1b,stroke:#f38ba8,color:#cdd6f4
+
+    class USER,ARGS,STDOUT,STDERR ext
+    class PARSER,VALIDATOR,GENERATOR,CSPRNG,BANNER ok
