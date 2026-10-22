@@ -35,7 +35,6 @@ composer.lock
 coverage/
 build/coverage
 tests/_output/*
-phpunit.xml
 
 # --- Build / Distribuição ---
 dist/

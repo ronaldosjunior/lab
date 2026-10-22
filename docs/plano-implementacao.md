@@ -9,7 +9,7 @@
   - `Erro: flag desconhecida --foo` (exit 1, stderr)
 - **Decisão técnica de aleatoriedade (mitiga viés):** um `random_bytes(strlen($pool))` por senha + `random_int()` como reserva documentada; ou, mais simples e auditável: **`random_int(0, $len-1)` por caractere** (CSPRNG, zero viés de módulo) — documentar em `docs/security.md` resumido no README.
 
-## Fase 1 — Estrutura de projeto e testabilidade
+## Fase 1 — Estrutura de projeto e testabilidade - Implementado
 - `composer.json` → PSR-4 `Genpass\` → `src/`; `require-dev: phpunit/phpunit ^10`; script `test: "phpunit"`.
 - `phpunit.xml.dist` (não `phpunit.xml`!) + **remover `phpunit.xml` do `.gitignore`** (trocar por `phpunit.xml` local).
 - `tests/_bootstrap.php` (se necessário) e diretório `tests/Unit/`.

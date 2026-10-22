@@ -1,0 +1,19 @@
+{
+    "name": "genpass/password-generator",
+    "description": "Gerador de senhas seguras via CLI",
+    "type": "project",
+    "require": {
+        "php": ">=8.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10"
+    },
+    "autoload": {
+        "psr-4": {
+            "Genpass\\": "src/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    }
+}
