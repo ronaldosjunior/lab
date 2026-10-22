@@ -10,9 +10,8 @@ Ferramenta de linha de comando (CLI) para gerar senhas robustas com controle sob
 
 - **Tamanho** da senha
 - **Inclusão de caracteres** (maiúsculas, minúsculas, números, símbolos)
-- **Quantidade** de senhas em lotes
 
-O foco é **simplicidade, segurança e zero dependências externas** — tudo em PHP puro, usando `random_bytes()` para geração aleatória previsível.
+O foco é **simplicidade, segurança e zero dependências externas** — tudo em PHP puro, usando a fonte CSPRNG nativa do PHP (`random_bytes()` / `random_int()`) como fonte de entropia.
 
 ---
 
@@ -53,13 +52,10 @@ php bin/generator.php --length=20
 # Senha de 16 caracteres (padrão)
 php bin/generator.php
 
-# Senha de 24 caracteres com símbolos
-php bin/generator.php --length=24 --symbols
+# Senha de 24 caracteres
+php bin/generator.php --length=24
 
-# 5 senhas de 12 caracteres, sem símbolos
-php bin/generator.php --length=12 --count=5 --no-symbols
-
-# Somente alfanuméricas
+# 32 caracteres, somente alfanuméricas
 php bin/generator.php --length=32 --no-symbols
 ```
 
@@ -67,10 +63,8 @@ php bin/generator.php --length=32 --no-symbols
 
 | Flag           | Default | Descrição                              |
 |----------------|---------|----------------------------------------|
-| `--length=N`   | `16`    | Tamanho da senha (min 8, max 128)      |
-| `--count=N`    | `1`     | Quantidade de senhas a gerar (max 100) |
-| `--symbols`    | `on`    | Incluir símbolos especials             |
-| `--no-symbols` | `off`   | Excluir símbolos                      |
+| `--length=N`   | `16`    | Tamanho da senha (min 8, max 64)       |
+| `--no-symbols` | `off`   | Excluir símbolos                       |
 | `--no-lower`   | `off`   | Excluir minúsculas                     |
 | `--no-upper`   | `off`   | Excluir maiúsculas                     |
 | `--no-digits`  | `off`   | Excluir números                        |
@@ -80,13 +74,14 @@ php bin/generator.php --length=32 --no-symbols
 
 ## Roadmap
 
-### v0.1 — MVP (atual)
-- [x] Geração de senha com `random_bytes()`
-- [x] Controle de tamanho e conjuntos de caracteres
-- [x] Output simples no stdout
-- [x] Testes unitários (PHPUnit)
-- [x] `--help`
-- [x] Tag de release
+### v0.1 — MVP (atual — escopo realinhado em 21/10/2026, ver `docs/escopo.md`)
+- [ ] Geração de senha com CSPRNG nativo do PHP, sem viés de módulo
+- [ ] Controle de tamanho (`--length`, 8–64) e conjuntos de caracteres
+- [ ] Output simples no stdout
+- [ ] Testes unitários (PHPUnit)
+- [ ] `--help`
+- [ ] Validação de entrada com mensagens de erro padrãoizadas
+- [ ] Tag de release
 
 ### v0.2 — Melhoria de UX
 - [ ] Saída em formato `--format=json|csv`

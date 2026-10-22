@@ -1,6 +1,8 @@
 # Backlog — Gerador de Senhas Seguras (PHP)
 
-Backlog mínimo derivado do [Roadmap](../README.md#roadmap). Cada item funcional (`RF`) tem critérios de aceite testáveis e um ou mais requisitos de teste (`RT`) que devem passar antes do item ser considerado pronto.
+Backlog derivado do [Roadmap](../README.md#roadmap) e do [Escopo v0.1](./escopo.md). Cada item funcional (`RF`) tem critérios de aceite testáveis e um ou mais requisitos de teste (`RT`) que devem passar antes do item ser considerado pronto.
+
+> **Notação:** os IDs `RF` são escopados por release — p. ex., `RF-01` da v0.1 (escopo §2) é distinto de `RF-01` da v0.2. Os IDs `RT` da v0.1 usam a faixa `RT-101..` para não colidir com os IDs das versões seguintes.
 
 **Legenda**
 
@@ -15,6 +17,127 @@ Backlog mínimo derivado do [Roadmap](../README.md#roadmap). Cada item funcional
 - [ ] Testes (`RT`) escritos e passando no `composer test` (PHPUnit)
 - [ ] Sem regressão nos testes existentes
 - [ ] README atualizado (flags/uso) se houver mudança de interface
+
+---
+
+## v0.1 — MVP (atual)
+
+> Fonte de verdade: [escopo.md](./escopo.md) (RFs §2, erros §7, aleatoriedade §8). Realinhado em 21/10/2026: `--count` saiu desta release (→ v0.2) e o benchmark de performance saiu (→ v1.0). Nenhum item está implementado ainda.
+
+### RF-01 — Geração de senha com CSPRNG (escopo §2, §8)
+
+Gerar a senha exclusivamente com o CSPRNG nativo do PHP, sem viés de módulo.
+
+- [ ] Usa `random_int(0, strlen($pool) - 1)` por posição, ou `random_bytes()` com rejeição (rejection sampling)
+- [ ] `rand()`, `mt_rand()` e seeding manual ausentes no código (revisão estática)
+- [ ] Cada posição é independente (sem reutilização de estado entre gerações)
+- [ ] Critério adotado documentado no código
+
+**Critérios de aceite**
+
+1. `php bin/generator.php --length=16` exibe exatamente uma linha de 16 caracteres
+2. `grep -rE 'rand\(\)|mt_rand' bin/ src/` não retorna resultados
+3. `php bin/generator.php --length=16` executado duas vezes não reutiliza estado (saídas não correlacionadas)
+
+**Testes**
+
+- [ ] `RT-101` — Given sem flags, When gerado, Then stdout tem 1 linha com exatamente 16 caracteres
+- [ ] `RT-102` — Given `--length=8`, Then stdout tem 1 linha de exatamente 8 caracteres
+- [ ] `RT-103` — Given `--length=64`, Then stdout tem 1 linha de exatamente 64 caracteres
+- [ ] `RT-104` — Given suíte completa, When `vendor/bin/phpunit`, Then status OK, sem erro de extensão ausente
+
+### RF-02 — Flag `--length` (escopo §2)
+
+`--length=N` define o tamanho; valores válidos: 8–64; default 16.
+
+- [ ] `--length=8` e `--length=64` geram senhas do tamanho solicitado
+- [ ] `--length=16` (default, sem flag) funciona
+- [ ] `--length=4`, `--length=65` → erro no stderr, exit code 1, mensagem exata do escopo §7
+- [ ] `--length=abc` → erro no stderr, exit code 1, mensagem exata do escopo §7
+
+**Critérios de aceite**
+
+1. `php bin/generator.php --length=4` → stderr: `Erro: --length deve estar entre 8 e 64.`
+2. `php bin/generator.php --length=65` → stderr: `Erro: --length deve estar entre 8 e 64.`
+3. `php bin/generator.php --length=abc` → stderr: `Erro: --length deve ser um inteiro entre 8 e 64.`
+
+**Testes**
+
+- [ ] `RT-105` — Given `--length=4`, Then exit code 1 e stderr contém exatamente `Erro: --length deve estar entre 8 e 64.`
+- [ ] `RT-106` — Given `--length=65`, Then exit code 1 e stderr contém exatamente `Erro: --length deve estar entre 8 e 64.`
+- [ ] `RT-107` — Given `--length=abc`, Then exit code 1 e stderr contém exatamente `Erro: --length deve ser um inteiro entre 8 e 64.`
+- [ ] `RT-108` — Given sem `--length`, Then senha gerada tem 16 caracteres
+
+### RF-03 — Flags de conjuntos de caracteres (escopo §2)
+
+`--no-upper`, `--no-lower`, `--no-digits`, `--no-symbols`; ao menos um conjunto ativo.
+
+- [ ] Cada flag exclui o respectivo conjunto da senha
+- [ ] Combinação de flags exclui todos os conjuntos listados
+- [ ] Todas as 4 flags ativas → erro no stderr, exit code 1, mensagem exata do escopo §7
+
+**Critérios de aceite**
+
+1. `php bin/generator.php --no-digits --no-symbols` não contém dígitos nem símbolos
+2. `php bin/generator.php --no-upper --no-lower --no-digits --no-symbols` → stderr: `Erro: ao menos um conjunto de caracteres deve permanecer ativo.`
+
+**Testes**
+
+- [ ] `RT-109` — Given `--no-digits`, Then senha não contém dígitos
+- [ ] `RT-110` — Given `--no-symbols`, Then senha não contém símbolos
+- [ ] `RT-111` — Given `--no-upper --no-lower --no-digits --no-symbols`, Then exit code 1 e stderr contém exatamente `Erro: ao menos um conjunto de caracteres deve permanecer ativo.`
+- [ ] `RT-112` — Given `--no-upper`, Then senha não contém maiúsculas; Given `--no-lower`, Then senha não contém minúsculas
+
+### RF-04 — Saída no stdout (escopo §2)
+
+Output textual puro, uma senha por linha, sem formatação adicional.
+
+- [ ] Saída vai somente para o stdout
+- [ ] Erros vão somente para o stderr
+- [ ] Sem cores, emoji, spinner ou prefixo no stdout
+
+**Critérios de aceite**
+
+1. `php bin/generator.php | wc -l` retorna `1`
+2. `php bin/generator.php 2>/dev/null | cat -A` não mostra escape sequences de cor
+
+**Testes**
+
+- [ ] `RT-113` — Given geração padrão, Then stdout tem exatamente 1 linha (a senha) e stderr vazio
+
+### RF-05 — Flag `--help` (escopo §2)
+
+Exibe lista de flags, valores padrão e exemplo de uso.
+
+- [ ] `--help` (e `-h`) lista `--length`, `--no-*` com defaults
+- [ ] Exit code 0
+- [ ] Ajuda vai para o stdout
+
+**Critérios de aceite**
+
+1. `php bin/generator.php --help` lista todas as flags da tabela de flags do README
+2. `php bin/generator.php --help; echo $?` retorna `0`
+
+**Testes**
+
+- [ ] `RT-114` — Given `--help`, Then exit code 0 e stdout contém `--length`, `--no-upper`, `--no-lower`, `--no-digits`, `--no-symbols`
+
+### RF-06 — Validação de entrada (escopo §2, §7)
+
+Parâmetros inválidos geram erro de uso com mensagem exata no stderr e exit code 1.
+
+- [ ] Todas as mensagens da tabela §7 do escopo são reproduzidas **exatamente** (contrato de teste)
+- [ ] Mensagens saem somente no stderr; stdout permanece vazio em erro
+- [ ] `exit code` é `1` em todo caso de erro
+
+**Critérios de aceite**
+
+1. `php bin/generator.php --foo` → stderr: `Erro: flag desconhecida --foo`
+2. Nenhum dos erros acima escreve algo no stdout
+
+**Testes**
+
+- [ ] `RT-115` — Given `--foo`, Then exit code 1, stderr contém exatamente `Erro: flag desconhecida --foo` e stdout está vazio
 
 ---
 
@@ -267,6 +390,12 @@ Pipeline mínimo com lint, teste e tag de release.
 
 | ID | Descrição | Release |
 |----|-----------|---------|
+| RF-01 | Geração de senha (CSPRNG) | v0.1 |
+| RF-02 | Flag `--length` (8–64) | v0.1 |
+| RF-03 | Flags de conjuntos (`--no-*`) | v0.1 |
+| RF-04 | Saída no stdout | v0.1 |
+| RF-05 | Flag `--help` | v0.1 |
+| RF-06 | Validação de entrada | v0.1 |
 | RF-01 | Saída JSON/CSV | v0.2 |
 | RF-02 | Geração em lote (`--count`) | v0.2 |
 | RF-03 | Barra de progresso | v0.2 |
@@ -281,6 +410,12 @@ Pipeline mínimo com lint, teste e tag de release.
 
 | RT | RF associado | Tipo |
 |----|--------------|------|
+| RT-101..104 | RF-01 (v0.1) | Auto |
+| RT-105..108 | RF-02 (v0.1) | Auto |
+| RT-109..112 | RF-03 (v0.1) | Auto |
+| RT-113 | RF-04 (v0.1) | Auto |
+| RT-114 | RF-05 (v0.1) | Auto |
+| RT-115 | RF-06 (v0.1) | Auto |
 | RT-01..04 | RF-01 | Auto |
 | RT-05..09 | RF-02 | Auto |
 | RT-10..13 | RF-03 | Auto/TTY |
@@ -297,8 +432,8 @@ Pipeline mínimo com lint, teste e tag de release.
 
 ## Como usar este backlog
 
-1. **Sprint**: puxe RFs na ordem (v0.2 → v0.3 → v1.0)
+1. **Sprint**: puxe RFs na ordem (v0.1 → v0.2 → v0.3 → v1.0)
 2. **Story-ready**: cada RF já traz critérios de aceite + RTs — pode virar uma task
 3. **Pronto**: um RF só é considerado *done* quando todos os RTs associados passam e a DoD é checklist completo
 
-> ⚠️ Este backlog é derivado do `README.md`. Se o README mudar, atualize este arquivo.
+> ⚠️ Este backlog é derivado do `docs/escopo.md` (para a v0.1) e do `README.md` (para as demais releases). Se qualquer um mudar, atualize este arquivo.
