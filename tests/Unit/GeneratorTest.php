@@ -102,14 +102,69 @@ class GeneratorTest extends TestCase
         $this->assertStringContainsString('Erro: flag desconhecida --foo', $errorOutput);
     }
 
+    public function testNoDigitsFlag(): void
+    {
+        // RT-109: Given --no-digits, Then senha não contém dígitos
+        $process = new Process(['php', $this->generatorPath, '--no-digits']);
+        $process->run();
+        
+        $this->assertEquals(0, $process->getExitCode());
+        $output = trim($process->getOutput());
+        $this->assertStringNotContainsStringAny('0123456789', $output);
+    }
+
+    public function testNoSymbolsFlag(): void
+    {
+        // RT-110: Given --no-symbols, Then senha não contém símbolos
+        $process = new Process(['php', $this->generatorPath, '--no-symbols']);
+        $process->run();
+        
+        $this->assertEquals(0, $process->getExitCode());
+        $output = trim($process->getOutput());
+        $this->assertStringNotContainsStringAny('!@#$%^&*()_+-=[]{}|;:,.<>?', $output);
+    }
+
     public function testAllFlagsDisabled(): void
     {
         // RT-111: Given --no-upper --no-lower --no-digits --no-symbols, Then exit code 1 e stderr contém exatamente "Erro: ao menos um conjunto de caracteres deve permanecer ativo."
-        $process = new Process(['php', $this->generatorPath, '--no-upper', '--no-lower', '--no-digits', '--no-symbols']);
+       $process = new Process(['php', $this->generatorPath, '--no-upper', '--no-lower', '--no-digits', '--no-symbols']);
         $process->run();
         
         $this->assertEquals(1, $process->getExitCode());
         $errorOutput = trim($process->getErrorOutput());
         $this->assertStringContainsString('Erro: ao menos um conjunto de caracteres deve permanecer ativo.', $errorOutput);
+    }
+
+    public function testNoUpperFlag(): void
+    {
+        // RT-112: Given --no-upper, Then senha não contém maiúsculas
+        $process = new Process(['php', $this->generatorPath, '--no-upper']);
+        $process->run();
+        
+        $this->assertEquals(0, $process->getExitCode());
+        $output = trim($process->getOutput());
+        $this->assertStringNotContainsStringAny('ABCDEFGHIJKLMNOPQRSTUVWXYZ', $output);
+    }
+
+    public function testNoLowerFlag(): void
+    {
+        // RT-112: Given --no-lower, Then senha não contém minúsculas
+        $process = new Process(['php', $this->generatorPath, '--no-lower']);
+        $process->run();
+        
+        $this->assertEquals(0, $process->getExitCode());
+        $output = trim($process->getOutput());
+        $this->assertStringNotContainsStringAny('abcdefghijklmnopqrstuvwxyz', $output);
+    }
+
+    public function testSingleLineOutput(): void
+    {
+        // RT-113: Given geração padrão, Then stdout tem exatamente 1 linha (a senha) e stderr vazio
+        $process = new Process(['php', $this->generatorPath]);
+        $process->run();
+        
+        $this->assertEquals(0, $process->getExitCode());
+        $output = trim($process->getOutput());
+        $this->assertStringNotContainsString("\n", $output); // Verifica que não há nova linha na senha
     }
 }

@@ -18,7 +18,7 @@
   - `src/OptionParser.php` — parse das flags → objeto/arrays; sem I/O.
   - `bin/generator.php` — fino: SAPI guard (como `status.php`), parser, loop, `fwrite(STDOUT)`, exit codes.
 
-## Fase 2 — Testes primeiro (TDD — os RTs da v0.1)
+## Fase 2 — Testes primeiro (TDD — os RTs da v0.1) - Implementado
 - `tests/Unit/PasswordGeneratorTest.php`:
   - RT-01: tamanho exato (`--length` 8, 16, 64)
   - RT-02: default = 16

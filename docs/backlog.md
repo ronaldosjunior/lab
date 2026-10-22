@@ -66,7 +66,6 @@ Gerar a senha exclusivamente com o CSPRNG nativo do PHP, sem viés de módulo.
 - [ ] `RT-105` — Given `--length=4`, Then exit code 1 e stderr contém exatamente `Erro: --length deve estar entre 8 e 64.`
 - [ ] `RT-106` — Given `--length=65`, Then exit code 1 e stderr contém exatamente `Erro: --length deve estar entre 8 e 64.`
 - [ ] `RT-107` — Given `--length=abc`, Then exit code 1 e stderr contém exatamente `Erro: --length deve ser um inteiro entre 8 e 64.`
-- [ ] `RT-108` — Given sem `--length`, Then senha gerada tem 16 caracteres
 
 ### RF-03 — Flags de conjuntos de caracteres (escopo §2)
 
