@@ -21,7 +21,7 @@ class PasswordGenerator
     {
         // Validação do tamanho da senha
         if ($length < 8 || $length > 64) {
-            throw new \InvalidArgumentException('O comprimento da senha deve ser entre 8 e 64 caracteres.');
+            throw new \InvalidArgumentException('Erro: O comprimento da senha deve ser entre 8 e 64 caracteres.');
         }
 
         // Conjuntos de caracteres disponíveis
@@ -49,7 +49,7 @@ class PasswordGenerator
 
         // Verificar se ao menos um conjunto de caracteres está ativo
         if (empty($uppercase) && empty($lowercase) && empty($digits) && empty($symbols)) {
-            throw new \InvalidArgumentException('Pelo menos um conjunto de caracteres deve estar ativo.');
+            throw new \InvalidArgumentException('Erro: ao menos um conjunto de caracteres deve permanecer ativo.');
         }
 
         // Montar o pool de caracteres disponíveis

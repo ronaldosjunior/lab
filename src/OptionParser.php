@@ -37,11 +37,11 @@ class OptionParser
                 switch ($key) {
                     case 'length':
                         if (!is_numeric($value)) {
-                            throw new \InvalidArgumentException("Valor inválido para --length: {$value}");
+                            throw new \InvalidArgumentException("Erro: --length deve ser um inteiro entre 8 e 64.");
                         }
                         $length = (int)$value;
                         if ($length < 8 || $length > 64) {
-                            throw new \InvalidArgumentException("--length deve estar entre 8 e 64, recebido: {$length}");
+                            throw new \InvalidArgumentException("Erro: --length deve estar entre 8 e 64, recebido: {$length}");
                         }
                         $options['length'] = $length;
                         break;
@@ -67,7 +67,7 @@ class OptionParser
                         $options['no-digits'] = true;
                         break;
                     default:
-                        throw new \InvalidArgumentException("Flag desconhecida: --{$flag}");
+                        throw new \InvalidArgumentException("Erro: flag desconhecida --{$flag}");
                 }
             }
         }

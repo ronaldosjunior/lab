@@ -12,7 +12,8 @@ declare(strict_types=1);
 // Impede inclusão acidental em contexto web
 if (PHP_SAPI !== 'cli') {
     http_response_code(503);
-    exit('Forbidden: CLI only.' . PHP_EOL);
+    fwrite(STDERR, "Forbidden: CLI only." . PHP_EOL);
+    exit(1);
 }
 
 fwrite(STDOUT, "ok\n");

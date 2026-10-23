@@ -41,8 +41,8 @@ class StatusTest extends TestCase
         $tempScript = sys_get_temp_dir() . '/status_test_web.php';
         $scriptContent = '<?php
             // Simular contexto web
-            $_SERVER["PHP_SAPI"] = "apache";
-            require "' . $this->statusScriptPath . '";
+            $_SERVER[\'PHP_SAPI\'] = \'apache\';
+            require \'' . $this->statusScriptPath . '\';
         ';
         file_put_contents($tempScript, $scriptContent);
 

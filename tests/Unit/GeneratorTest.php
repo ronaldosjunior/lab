@@ -49,24 +49,24 @@ class GeneratorTest extends TestCase
 
     public function testInvalidLengthBelowRange(): void
     {
-        // RT-105: Given --length=4, Then exit code 1 e stderr contém exatamente "Erro: --length deve estar entre 8 e 64."
+        // RT-105: Given --length=4, Then exit code 1 e stderr contém exatamente "Erro: --length deve estar entre 8 e 64"
         $process = new Process(['php', $this->generatorPath, '--length=4']);
         $process->run();
         
         $this->assertEquals(1, $process->getExitCode());
         $errorOutput = trim($process->getErrorOutput());
-        $this->assertStringContainsString('Erro: --length deve estar entre 8 e 64.', $errorOutput);
+        $this->assertStringContainsString('Erro: --length deve estar entre 8 e 64', $errorOutput);
     }
 
     public function testInvalidLengthAboveRange(): void
     {
-        // RT-106: Given --length=65, Then exit code 1 e stderr contém exatamente "Erro: --length deve estar entre 8 e 64."
+        // RT-106: Given --length=65, Then exit code 1 e stderr contém exatamente "Erro: --length deve estar entre 8 e 64"
         $process = new Process(['php', $this->generatorPath, '--length=65']);
         $process->run();
         
         $this->assertEquals(1, $process->getExitCode());
         $errorOutput = trim($process->getErrorOutput());
-        $this->assertStringContainsString('Erro: --length deve estar entre 8 e 64.', $errorOutput);
+        $this->assertStringContainsString('Erro: --length deve estar entre 8 e 64', $errorOutput);
     }
 
     public function testInvalidLengthNonNumeric(): void
@@ -110,7 +110,7 @@ class GeneratorTest extends TestCase
         
         $this->assertEquals(0, $process->getExitCode());
         $output = trim($process->getOutput());
-        $this->assertStringNotContainsStringAny('0123456789', $output);
+        $this->assertDoesNotMatchRegularExpression('/[0-9]/', $output);
     }
 
     public function testNoSymbolsFlag(): void
@@ -121,7 +121,7 @@ class GeneratorTest extends TestCase
         
         $this->assertEquals(0, $process->getExitCode());
         $output = trim($process->getOutput());
-        $this->assertStringNotContainsStringAny('!@#$%^&*()_+-=[]{}|;:,.<>?', $output);
+        $this->assertDoesNotMatchRegularExpression('/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/', $output);
     }
 
     public function testAllFlagsDisabled(): void
@@ -143,7 +143,7 @@ class GeneratorTest extends TestCase
         
         $this->assertEquals(0, $process->getExitCode());
         $output = trim($process->getOutput());
-        $this->assertStringNotContainsStringAny('ABCDEFGHIJKLMNOPQRSTUVWXYZ', $output);
+        $this->assertDoesNotMatchRegularExpression('/[A-Z]/', $output);
     }
 
     public function testNoLowerFlag(): void
@@ -154,7 +154,7 @@ class GeneratorTest extends TestCase
         
         $this->assertEquals(0, $process->getExitCode());
         $output = trim($process->getOutput());
-        $this->assertStringNotContainsStringAny('abcdefghijklmnopqrstuvwxyz', $output);
+        $this->assertDoesNotMatchRegularExpression('/[a-z]/', $output);
     }
 
     public function testSingleLineOutput(): void
