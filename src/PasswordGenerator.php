@@ -19,7 +19,52 @@ class PasswordGenerator
      */
     public function generate(int $length, array $options = []): string
     {
-        // Implementação será feita na Fase 3
-        return '';
+        // Validação do tamanho da senha
+        if ($length < 8 || $length > 64) {
+            throw new \InvalidArgumentException('O comprimento da senha deve ser entre 8 e 64 caracteres.');
+        }
+
+        // Conjuntos de caracteres disponíveis
+        $uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $lowercase = 'abcdefghijklmnopqrstuvwxyz';
+        $digits = '0123456789';
+        $symbols = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
+        // Aplicar opções
+        if (isset($options['no-upper']) && $options['no-upper']) {
+            $uppercase = '';
+        }
+        
+        if (isset($options['no-lower']) && $options['no-lower']) {
+            $lowercase = '';
+        }
+        
+        if (isset($options['no-digits']) && $options['no-digits']) {
+            $digits = '';
+        }
+        
+        if (isset($options['no-symbols']) && $options['no-symbols']) {
+            $symbols = '';
+        }
+
+        // Verificar se ao menos um conjunto de caracteres está ativo
+        if (empty($uppercase) && empty($lowercase) && empty($digits) && empty($symbols)) {
+            throw new \InvalidArgumentException('Pelo menos um conjunto de caracteres deve estar ativo.');
+        }
+
+        // Montar o pool de caracteres disponíveis
+        $pool = $uppercase . $lowercase . $digits . $symbols;
+
+        // Gerar senha usando CSPRNG
+        $password = '';
+        $poolLength = strlen($pool);
+        
+        for ($i = 0; $i < $length; $i++) {
+            // Usar random_int para evitar viés de módulo
+            $randomIndex = random_int(0, $poolLength - 1);
+            $password .= $pool[$randomIndex];
+        }
+
+        return $password;
     }
 }

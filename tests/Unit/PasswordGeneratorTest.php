@@ -56,25 +56,37 @@ class PasswordGeneratorTest extends TestCase
     public function testGenerateWithoutUppercase(): void
     {
         $password = $this->generator->generate(32, ['no-upper' => true]);
-        $this->assertStringNotContainsStringAny('ABCDEFGHIJKLMNOPQRSTUVWXYZ', $password);
+        // Verificar que não há caracteres maiúsculos
+        foreach (str_split($password) as $char) {
+            $this->assertNotContains($char, str_split('ABCDEFGHIJKLMNOPQRSTUVWXYZ'));
+        }
     }
 
     public function testGenerateWithoutLowercase(): void
     {
         $password = $this->generator->generate(32, ['no-lower' => true]);
-        $this->assertStringNotContainsStringAny('abcdefghijklmnopqrstuvwxyz', $password);
+        // Verificar que não há caracteres minúsculos
+        foreach (str_split($password) as $char) {
+            $this->assertNotContains($char, str_split('abcdefghijklmnopqrstuvwxyz'));
+        }
     }
 
     public function testGenerateWithoutDigits(): void
     {
         $password = $this->generator->generate(32, ['no-digits' => true]);
-        $this->assertStringNotContainsStringAny('0123456789', $password);
+        // Verificar que não há dígitos
+        foreach (str_split($password) as $char) {
+            $this->assertNotContains($char, str_split('0123456789'));
+        }
     }
 
     public function testGenerateWithoutSymbols(): void
     {
         $password = $this->generator->generate(32, ['no-symbols' => true]);
-        $this->assertStringNotContainsStringAny('!@#$%^&*()_+-=[]{}|;:,.<>?', $password);
+        // Verificar que não há símbolos
+        foreach (str_split($password) as $char) {
+            $this->assertNotContains($char, str_split('!@#$%^&*()_+-=[]{}|;:,.<>?'));
+        }
     }
 
     /**
