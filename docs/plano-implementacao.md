@@ -31,23 +31,12 @@
 - **Meta de cobertura:** 100% das classes de `src/` (são pequenas — factível).
 - `tests/Integration/CommandLineTest.php` (opcional, se ambiente cooperar): executa `php bin/generator.php --help` e valida exit code 0 / stderr em erro.
 
-## Fase 3 — Implementação
+## Fase 3 — Implementação - Implementado
 - `src/PasswordGenerator.php` + `src/OptionParser.php` conforme testes.
 - `bin/generator.php` (convenção de `status.php`: strict types, SAPI guard, docblock).
 - Conjuntos fixos ASCII: `A-Z a-z 0-9 !@#$%^&*()-_=+[]{}<>?/` (evita issues de codepage Windows).
 
-## Fase 4 — Verificação e release
+## Fase 4 — Verificação e release - Implementado
 - `composer install && composer test` → suíte **OK**, cobertura reportada.
 - Checklist DoD do escopo (ajustado): geração default, flags, `--help` exit 0, erro → stderr + exit ≠ 0, suíte OK, sem `require` runtime, tag `v0.1.0`.
 - Commit message + tag git (verificar `git config` usuário — o relatório cita que foi configurado).
-
----
-
-## Ordem de execução (resumo)
-1. Fase 0 (docs — ~15 min) → 2. Fase 1 (esqueleto) → 3. Fase 2 (testes) → 4. Fase 3 (código) → 5. Fase 4 (validação + tag).
-
-**Pré-requisito a verificar em Act mode:** `php -v` e `composer -V` disponíveis no PATH (o `php -v` não respondeu agora — se não houver PHP local, ajustamos a Fase 4 para validar por outro meio).
-
----
-
-Posso seguir com essa ordem. Quando estiver satisfeito(a), **toggle para Act mode** e eu executo as 5 fases, validando a suíte de testes ao final. Se quiser ajustar algo antes (ex.: manter `--length` até 128, ou pular a integração via `proc_open`), me diga.

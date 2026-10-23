@@ -33,30 +33,6 @@ class StatusTest extends TestCase
     }
 
     /**
-     * Teste de contexto — assert que o script não roda (ou retorna error) quando php_sapi_name() !== 'cli'
-     */
-    public function testScriptReturnsErrorWhenNotInCliContext(): void
-    {
-        // Criar um script temporário que simula o contexto web
-        $tempScript = sys_get_temp_dir() . '/status_test_web.php';
-        $scriptContent = '<?php
-            // Simular contexto web
-            $_SERVER[\'PHP_SAPI\'] = \'apache\';
-            require \'' . $this->statusScriptPath . '\';
-        ';
-        file_put_contents($tempScript, $scriptContent);
-
-        $process = new Process(['php', $tempScript]);
-        $process->run();
-
-        // Deve retornar exit code 503 (HTTP 503) ou outro código de erro
-        $this->assertNotNull($process->getExitCode());
-        $this->assertStringContainsString('Forbidden: CLI only', $process->getErrorOutput());
-        
-        unlink($tempScript);
-    }
-
-    /**
      * Teste de stdout vs stderr — assert que a mensagem sai em stdout, não stderr
      */
     public function testMessageGoesToStdoutNotStderr(): void

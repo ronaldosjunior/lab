@@ -59,6 +59,4 @@ tmp/
 
 # --- Documentação gerada ---
 docs/_build/
-docs/relatorio.md
-prompts/
 *.pdf

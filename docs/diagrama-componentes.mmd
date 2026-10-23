@@ -23,9 +23,9 @@ flowchart TD
     subgraph APP ["⚙️ Aplicação — <code>bin/generator.php</code>"]
         direction TB
 
-        PARSER["1. Parser de Argumentos<br/>(parse_flags)"]
+        PARSER["1. Parser de Argumentos<br/>(OptionParser)"]
         VALIDATOR{"2. Validador<br/>(valida parâmetros)"}
-        GENERATOR["3. Gerador de Senha<br/>(generate_password)"]
+        GENERATOR["3. Gerador de Senha<br/>(PasswordGenerator)"]
         CSPRNG["4. CSPRNG<br/><code>random_bytes()</code><br/>(entropia criptográfica)"]
         BANNER["5. Saída / Formatação<br/>(loop lote)"]
 

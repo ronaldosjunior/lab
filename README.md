@@ -26,11 +26,31 @@ O foco é **simplicidade, segurança e zero dependências externas** — tudo em
 
 ---
 
+## Tecnologias Utilizadas
+
+### Linguagens e Frameworks
+- **PHP 8.1+** - Linguagem principal para implementação
+- **PHPUnit** - Para testes unitários
+
+### Modelos de IA e Assistentes de Código
+- **qwen3.8:27b** - utilizado com as extensões Continue e Cline do VS Code
+- **qwen3-coder:30b** - substituindo o **qwen3.8**, apresentou melhor relação perfomance x recursos.
+- **Microsoft 365 Copilot** - sugestão de ferramentas e modelos locais
+
+### Ferramentas de Desenvolvimento
+- **Composer** - Gerenciamento de dependências PHP
+- **Git** - Controle de versão
+
+---
+
 ## Como Rodar Localmente
 
 ### Pré-requisitos
 
-- PHP 8.1+ instalado e disponível no `PATH`
+- PHP 8.1+ instalado e disponível no `PATH` 
+    (baixar [XAMPP](https://www.apachefriends.org/pt_br/index.html) ou outro servidor PHP)
+- [Composer](https://getcomposer.org/download/) instalado e disponível no `PATH`
+- [Git](https://git-scm.com/install/windows) instalado (para clonar o repositório)
 
 ### Passos
 
@@ -39,7 +59,7 @@ O foco é **simplicidade, segurança e zero dependências externas** — tudo em
 git clone <url-do-repo>
 cd <nome-do-repo>
 
-# 2. (Opcional) Instale dependências — no MVP não há, mas para o futuro:
+# 2. Instale as dependências
 composer install
 
 # 3. Gere sua primeira senha
@@ -57,6 +77,9 @@ php bin/generator.php --length=24
 
 # 32 caracteres, somente alfanuméricas
 php bin/generator.php --length=32 --no-symbols
+
+# Senha sem números e símbolos (apenas letras)
+php bin/generator.php --length=20 --no-digits --no-symbols
 ```
 
 ### Flags disponíveis (MVP)
@@ -72,30 +95,29 @@ php bin/generator.php --length=32 --no-symbols
 
 ---
 
-## Roadmap
+## Limitações e Próximos Passos
 
-### v0.1 — MVP (atual — escopo realinhado em 21/10/2026, ver `docs/escopo.md`)
-- [ ] Geração de senha com CSPRNG nativo do PHP, sem viés de módulo
-- [ ] Controle de tamanho (`--length`, 8–64) e conjuntos de caracteres
-- [ ] Output simples no stdout
-- [ ] Testes unitários (PHPUnit)
-- [ ] `--help`
-- [ ] Validação de entrada com mensagens de erro padrãoizadas
-- [ ] Tag de release
+### Limitações Atuais (v0.1 - MVP)
+- **Somente geração de senha única** - não há suporte para geração em lote
+- **Formato de saída limitado** - apenas texto simples no stdout
+- **Sem funcionalidades avançadas de segurança** - cálculo de entropia, modo passphrase, auditoria de viés
+- **Interface minimalista** - sem barra de progresso ou cópia automática para clipboard
 
-### v0.2 — Melhoria de UX
+### Próximos Passos (Roadmap)
+
+#### v0.2 — Melhoria de UX
 - [ ] Saída em formato `--format=json|csv`
 - [ ] Geração em lote (`--count`)
 - [ ] Barra de progresso para lotes grandes
 - [ ] Cópia para clipboard (`--copy`)
 
-### v0.3 — Segurança Avançada
+#### v0.3 — Segurança Avançada
 - [ ] Cálculo de entropia da senha gerada (bits)
 - [ ] Modo "passphrase" (estilo Diceware)
 - [ ] Whitelist/blacklist de caracteres (ex: evitar caracteres ambíguos `0/O`, `1/l`)
 - [ ] Auditoria: verificação de bias via chi-quadrado
 
-### v1.0 — Estável
+#### v1.0 — Estável
 - [ ] Documentação completa
 - [ ] CI/CD (GitHub Actions)
 - [ ] Pacote publicável via Packagist (opcional)
@@ -107,6 +129,32 @@ php bin/generator.php --length=32 --no-symbols
 1. Fork o repositório
 2. Crie uma branch: `git checkout -b feature/nome-da-feature`
 3. Faça o commit e abra um Pull Request
+
+---
+
+## Testes
+
+O projeto inclui testes unitários com PHPUnit:
+
+```bash
+# Executar todos os testes
+composer test
+
+# Ou diretamente com PHPUnit
+vendor/bin/phpunit
+```
+
+Os testes cobrem:
+- Geração de senhas com diferentes tamanhos
+- Validação de entrada
+- Controle de conjuntos de caracteres
+- Mensagens de erro padrão
+
+---
+
+## Créditos
+
+Este projeto foi desenvolvido como parte do **Laboratório Introdutório Construindo um Mini-projeto com Inteligência Artificial Generativa**.
 
 ---
 

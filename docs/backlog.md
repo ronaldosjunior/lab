@@ -13,10 +13,10 @@ Backlog derivado do [Roadmap](../README.md#roadmap) e do [Escopo v0.1](./escopo.
 
 **Definição de Pronto (DoD) por item**
 
-- [ ] Código em PHP puro, sem dependências externas
-- [ ] Testes (`RT`) escritos e passando no `composer test` (PHPUnit)
-- [ ] Sem regressão nos testes existentes
-- [ ] README atualizado (flags/uso) se houver mudança de interface
+- [x] Código em PHP puro, sem dependências externas
+- [x] Testes (`RT`) escritos e passando no `composer test` (PHPUnit)
+- [x] Sem regressão nos testes existentes
+- [x] README atualizado (flags/uso) se houver mudança de interface
 
 ---
 
@@ -28,10 +28,10 @@ Backlog derivado do [Roadmap](../README.md#roadmap) e do [Escopo v0.1](./escopo.
 
 Gerar a senha exclusivamente com o CSPRNG nativo do PHP, sem viés de módulo.
 
-- [ ] Usa `random_int(0, strlen($pool) - 1)` por posição, ou `random_bytes()` com rejeição (rejection sampling)
-- [ ] `rand()`, `mt_rand()` e seeding manual ausentes no código (revisão estática)
-- [ ] Cada posição é independente (sem reutilização de estado entre gerações)
-- [ ] Critério adotado documentado no código
+- [x] Usa `random_int(0, strlen($pool) - 1)` por posição, ou `random_bytes()` com rejeição (rejection sampling)
+- [x] `rand()`, `mt_rand()` e seeding manual ausentes no código (revisão estática)
+- [x] Cada posição é independente (sem reutilização de estado entre gerações)
+- [x] Critério adotado documentado no código
 
 **Critérios de aceite**
 
@@ -41,19 +41,19 @@ Gerar a senha exclusivamente com o CSPRNG nativo do PHP, sem viés de módulo.
 
 **Testes**
 
-- [ ] `RT-101` — Given sem flags, When gerado, Then stdout tem 1 linha com exatamente 16 caracteres
-- [ ] `RT-102` — Given `--length=8`, Then stdout tem 1 linha de exatamente 8 caracteres
-- [ ] `RT-103` — Given `--length=64`, Then stdout tem 1 linha de exatamente 64 caracteres
-- [ ] `RT-104` — Given suíte completa, When `vendor/bin/phpunit`, Then status OK, sem erro de extensão ausente
+- [x] `RT-101` — Given sem flags, When gerado, Then stdout tem 1 linha com exatamente 16 caracteres
+- [x] `RT-102` — Given `--length=8`, Then stdout tem 1 linha de exatamente 8 caracteres
+- [x] `RT-103` — Given `--length=64`, Then stdout tem 1 linha de exatamente 64 caracteres
+- [x] `RT-104` — Given suíte completa, When `vendor/bin/phpunit`, Then status OK, sem erro de extensão ausente
 
 ### RF-02 — Flag `--length` (escopo §2)
 
 `--length=N` define o tamanho; valores válidos: 8–64; default 16.
 
-- [ ] `--length=8` e `--length=64` geram senhas do tamanho solicitado
-- [ ] `--length=16` (default, sem flag) funciona
-- [ ] `--length=4`, `--length=65` → erro no stderr, exit code 1, mensagem exata do escopo §7
-- [ ] `--length=abc` → erro no stderr, exit code 1, mensagem exata do escopo §7
+- [x] `--length=8` e `--length=64` geram senhas do tamanho solicitado
+- [x] `--length=16` (default, sem flag) funciona
+- [x] `--length=4`, `--length=65` → erro no stderr, exit code 1, mensagem exata do escopo §7
+- [x] `--length=abc` → erro no stderr, exit code 1, mensagem exata do escopo §7
 
 **Critérios de aceite**
 
@@ -63,17 +63,17 @@ Gerar a senha exclusivamente com o CSPRNG nativo do PHP, sem viés de módulo.
 
 **Testes**
 
-- [ ] `RT-105` — Given `--length=4`, Then exit code 1 e stderr contém exatamente `Erro: --length deve estar entre 8 e 64.`
-- [ ] `RT-106` — Given `--length=65`, Then exit code 1 e stderr contém exatamente `Erro: --length deve estar entre 8 e 64.`
-- [ ] `RT-107` — Given `--length=abc`, Then exit code 1 e stderr contém exatamente `Erro: --length deve ser um inteiro entre 8 e 64.`
+- [x] `RT-105` — Given `--length=4`, Then exit code 1 e stderr contém exatamente `Erro: --length deve estar entre 8 e 64.`
+- [x] `RT-106` — Given `--length=65`, Then exit code 1 e stderr contém exatamente `Erro: --length deve estar entre 8 e 64.`
+- [x] `RT-107` — Given `--length=abc`, Then exit code 1 e stderr contém exatamente `Erro: --length deve ser um inteiro entre 8 e 64.`
 
 ### RF-03 — Flags de conjuntos de caracteres (escopo §2)
 
 `--no-upper`, `--no-lower`, `--no-digits`, `--no-symbols`; ao menos um conjunto ativo.
 
-- [ ] Cada flag exclui o respectivo conjunto da senha
-- [ ] Combinação de flags exclui todos os conjuntos listados
-- [ ] Todas as 4 flags ativas → erro no stderr, exit code 1, mensagem exata do escopo §7
+- [x] Cada flag exclui o respectivo conjunto da senha
+- [x] Combinação de flags exclui todos os conjuntos listados
+- [x] Todas as 4 flags ativas → erro no stderr, exit code 1, mensagem exata do escopo §7
 
 **Critérios de aceite**
 
@@ -82,18 +82,18 @@ Gerar a senha exclusivamente com o CSPRNG nativo do PHP, sem viés de módulo.
 
 **Testes**
 
-- [ ] `RT-109` — Given `--no-digits`, Then senha não contém dígitos
-- [ ] `RT-110` — Given `--no-symbols`, Then senha não contém símbolos
-- [ ] `RT-111` — Given `--no-upper --no-lower --no-digits --no-symbols`, Then exit code 1 e stderr contém exatamente `Erro: ao menos um conjunto de caracteres deve permanecer ativo.`
-- [ ] `RT-112` — Given `--no-upper`, Then senha não contém maiúsculas; Given `--no-lower`, Then senha não contém minúsculas
+- [x] `RT-109` — Given `--no-digits`, Then senha não contém dígitos
+- [x] `RT-110` — Given `--no-symbols`, Then senha não contém símbolos
+- [x] `RT-111` — Given `--no-upper --no-lower --no-digits --no-symbols`, Then exit code 1 e stderr contém exatamente `Erro: ao menos um conjunto de caracteres deve permanecer ativo.`
+- [x] `RT-112` — Given `--no-upper`, Then senha não contém maiúsculas; Given `--no-lower`, Then senha não contém minúsculas
 
 ### RF-04 — Saída no stdout (escopo §2)
 
 Output textual puro, uma senha por linha, sem formatação adicional.
 
-- [ ] Saída vai somente para o stdout
-- [ ] Erros vão somente para o stderr
-- [ ] Sem cores, emoji, spinner ou prefixo no stdout
+- [x] Saída vai somente para o stdout
+- [x] Erros vão somente para o stderr
+- [x] Sem cores, emoji, spinner ou prefixo no stdout
 
 **Critérios de aceite**
 
@@ -102,15 +102,15 @@ Output textual puro, uma senha por linha, sem formatação adicional.
 
 **Testes**
 
-- [ ] `RT-113` — Given geração padrão, Then stdout tem exatamente 1 linha (a senha) e stderr vazio
+- [x] `RT-113` — Given geração padrão, Then stdout tem exatamente 1 linha (a senha) e stderr vazio
 
 ### RF-05 — Flag `--help` (escopo §2)
 
 Exibe lista de flags, valores padrão e exemplo de uso.
 
-- [ ] `--help` (e `-h`) lista `--length`, `--no-*` com defaults
-- [ ] Exit code 0
-- [ ] Ajuda vai para o stdout
+- [x] `--help` (e `-h`) lista `--length`, `--no-*` com defaults
+- [x] Exit code 0
+- [x] Ajuda vai para o stdout
 
 **Critérios de aceite**
 
@@ -119,15 +119,15 @@ Exibe lista de flags, valores padrão e exemplo de uso.
 
 **Testes**
 
-- [ ] `RT-114` — Given `--help`, Then exit code 0 e stdout contém `--length`, `--no-upper`, `--no-lower`, `--no-digits`, `--no-symbols`
+- [x] `RT-114` — Given `--help`, Then exit code 0 e stdout contém `--length`, `--no-upper`, `--no-lower`, `--no-digits`, `--no-symbols`
 
 ### RF-06 — Validação de entrada (escopo §2, §7)
 
 Parâmetros inválidos geram erro de uso com mensagem exata no stderr e exit code 1.
 
-- [ ] Todas as mensagens da tabela §7 do escopo são reproduzidas **exatamente** (contrato de teste)
-- [ ] Mensagens saem somente no stderr; stdout permanece vazio em erro
-- [ ] `exit code` é `1` em todo caso de erro
+- [x] Todas as mensagens da tabela §7 do escopo são reproduzidas **exatamente** (contrato de teste)
+- [x] Mensagens saem somente no stderr; stdout permanece vazio em erro
+- [x] `exit code` é `1` em todo caso de erro
 
 **Critérios de aceite**
 
@@ -136,7 +136,7 @@ Parâmetros inválidos geram erro de uso com mensagem exata no stderr e exit cod
 
 **Testes**
 
-- [ ] `RT-115` — Given `--foo`, Then exit code 1, stderr contém exatamente `Erro: flag desconhecida --foo` e stdout está vazio
+- [x] `RT-115` — Given `--foo`, Then exit code 1, stderr contém exatamente `Erro: flag desconhecida --foo` e stdout está vazio
 
 ---
 
